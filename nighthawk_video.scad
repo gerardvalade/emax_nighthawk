@@ -45,7 +45,7 @@ module hexaprismx(
 
 module video_transmitter()
 {
-	translate([0, 0, transmitter_heigth/2])  color("gray") cube([transmitter_length, transmitter_width, transmitter_heigth], center=true);
+	translate([0, 0, transmitter_heigth/2])  color("brown") cube([transmitter_length, transmitter_width, transmitter_heigth], center=true);
 	translate([-37/2+3.5, 0, transmitter_heigth]) {
 		translate([0, 0, 11.30]) color("red") cylinder(d=7.23, h=42.66);
 		translate([0, 0, 0]) color("yellow") cylinder(d=7.5, h=11.30);
@@ -219,16 +219,12 @@ module video_bracket(heigth)
 
 module video_transmitter_view()
 {
-	//translate([5, 0, 0]) rotate([0, 0, 0]) video_bracket_simple();
 	translate([5, 0, 0]) rotate([0, 0, 0]) video_bracket();
 	translate([-6, 0, 0]) rotate([0, 0, 0]) video_transmitter();
-	translate([5, 0, -2]) rotate([0, 180, 0])  video_led_bracket();
 	translate([5-4, -40, 6.5])  rotate([0, 90, 0]) rotate([-90, 0, 0]) xt60_bracket();
-//	translate([0, 0, 1.5/2])  color("yellow", 0.1) cube([100, 56, 1.5], center=true);
 }
-//translate([80, 0, 0]) video_transmitter_view();
-//translate([-30, 0, 0]) rotate([0, 0, 0]) video_bracket_simple();
-translate([0, 0, 13]) rotate([0, 180, 0]) video_bracket();
-translate([-70, 0, 0]) rotate([0, 0, 0])  video_led_bracket();
 
+//translate([80, 0, 0]) video_transmitter_view();
+
+translate([0, 0, 13]) rotate([0, 180, 0]) video_bracket();
 translate([0, 70, 0])  rotate([0, 0, 0]) xt60_bracket();

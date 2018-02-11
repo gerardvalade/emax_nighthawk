@@ -13,7 +13,6 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-use <roundCornersCube.scad>
 
 $fn=30;
 
@@ -22,6 +21,44 @@ width = 55;
 fc_hole_width = 30.5;
 M3_hole = 2.5;
 
+module roundCornersCube(x,y,z,r)  // Now we just substract the shape we have created in the four corners
+{
+	module createMeniscus(h,radius) // This module creates the shape that needs to be substracted from a cube to make its corners rounded.
+	{
+		difference(){        //This shape is basicly the difference between a quarter of cylinder and a cube
+		   translate([radius/2+0.1,radius/2+0.1,0]){
+		      cube([radius+0.2,radius+0.1,h+0.2],center=true);         // All that 0.x numbers are to avoid "ghost boundaries" when substracting
+		   }
+		
+		   cylinder(h=h+0.2,r=radius,$fn = 25,center=true);
+		}
+	
+	}
+	difference(){
+	   cube([x,y,z], center=true);
+	
+	translate([x/2-r,y/2-r]){  // We move to the first corner (x,y)
+	      rotate(0){  
+	         createMeniscus(z,r); // And substract the meniscus
+	      }
+	   }
+	   translate([-x/2+r,y/2-r]){ // To the second corner (-x,y)
+	      rotate(90){
+	         createMeniscus(z,r); // But this time we have to rotate the meniscus 90 deg
+	      }
+	   }
+	      translate([-x/2+r,-y/2+r]){ // ... 
+	      rotate(180){
+	         createMeniscus(z,r);
+	      }
+	   }
+	      translate([x/2-r,-y/2+r]){
+	      rotate(270){
+	         createMeniscus(z,r);
+	      }
+	   }
+	}
+}
 
 
 module battery_holder()

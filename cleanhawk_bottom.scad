@@ -16,33 +16,7 @@
 
 $fn=30;
 
-module spacer(heigth)
-{
-	width = 81;
-	length  = 135;
-	dia = 9;
-	
-	module arm()
-	{
-		M3_hole = 3.5;
-		arm_lenght = 94;
-		arm_width = 24;
-		translate([-arm_width/2, 0, 0])  difference()
-		{
-			translate([0, -5, 0]) rotate([0, 0, 0]) cube([arm_width, arm_lenght, 3]); 	
-			translate([arm_width/2-7, 0, -1]) cylinder(d=M3_hole, h=10);
-			translate([arm_width/2+7, 0, -1]) cylinder(d=M3_hole, h=10);
-		}
-	}
-	module arm_pos()
-	{
-		translate([27.7, 49.8, 9]) rotate([0, 0, -65]) arm();
-	}
-	
-	translate([-width/2, -length/2-2.6, 0])   import("Cleanhawk_Spacer.STL");
-}
-
-module frame()
+module cleanhawk_bottom_frame()
 {
 	thin = 1.4;
 	height = 3.5;
@@ -170,7 +144,7 @@ module hole()
 }
 
 //translate([0, 0, 0]) rotate([0, 0, 0]) hole();
-translate([0, 0, 0]) rotate([0, 0, 0]) frame();
+translate([0, 0, 0]) rotate([0, 0, 0]) cleanhawk_bottom_frame();
 
 //translate([0, 0, 0]) rotate([0, 0, 0]) spacer(3.5);
 

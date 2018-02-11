@@ -32,7 +32,7 @@ use <nighthawk_fc_receiver.scad>
 translate([0, 0, 2.5]) {
 	translate([0, 0, 0])rotate([0, 0, 180]) frsky_view3();
 	
-	translate([-40, 0, 0]) rotate([0, 0, 180]) XT60_gps_view();
+	translate([-40, 0, 0]) rotate([0, 0, 180]) gps_bracket_view();
 
 	translate([-90, 0, 0]) rotate([0, 0, 0]) video_transmitter_view();
 	

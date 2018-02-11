@@ -14,12 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use <xt60_bracket.scad>
 
 $fn=30;
-xt60_length = xt60_length();
-xt60_width = xt60_width();
-xt60_heigth = xt60_heigth();
 
 pillar_width = 47;
 pilar_heigth = 35;
@@ -81,50 +77,6 @@ module hexaprismx(
 
 
 
-module XT60BasePlate()
-{
-	translate([0,0,1.8/2]) {
-		difference() {
-			cube([xt60_length+0.5,xt60_width+0.5,1.8], center=true);
-			hull() {
-				translate([0, -4, 0]) cylinder(d=12, h=10, center=true);
-				translate([0, 4, 0]) cylinder(d=12, h=10, center=true);
-			}
-		}
-	}
-}
-
-	
-
-module XT60Plate()
-{
-	difference() {
-		XT60BasePlate();
-		xt60_screw_hole(dia=2.7);
-	}
-}
-
-
-module XT60_holder()
-{
-	module plain()
-	{
-		translate([0, 0, 1.5])  roundCornersCube(16+10, 56-0.8, 2, 3);
-		roundCornersCube(16, 30, 2, 3);
-		
-	}
-	module hole()
-	{
-		for(y=[1, -1]) translate([0, y*43/2, 2]) cylinder(d=M3_dia, h=10, center=true);	
-	}
-	difference() {
-		plain();
-		xt60_screw_hole(dia=2.7);
-		hole();
-		
-	}
-	
-}
 
 module pillar_hole(height)
 {
@@ -211,17 +163,15 @@ module antenna_bracket(thick=0.6, height=top_height, fullview=false)
 }
 
 
-module GPS_bracket(thick=0.6, height=top_height)
+module gps_bracket(thick=0.6, height=top_height)
 {
 	gps_width = 26+0.6;
 	gps_length= 21+0.6;
 	
-//	arm_length = 16;
 	arm_length = 20;
 	arm_heigth = 13;
 	arm_pos_z = 29-8+10;
-	//inner_tube_dia = 8*2/sqrt(3);// 11;
-	out_tube_dia =  8*2/sqrt(3) +3; //inner_tube_dia + 3;
+	out_tube_dia =  8*2/sqrt(3) +3; 
 	inner_tube_dia = out_tube_dia -5;
 	
 	fn = 30;
@@ -267,165 +217,8 @@ module GPS_bracket(thick=0.6, height=top_height)
 		translate([0, -arm_length, 0])  
 		{
 			
-//				#translate([0, 0, 2.1]) rotate([0, 0, -0]) hull() {
-//					translate([-2, 0, 0])   cylinder(d=3.5, h=arm_pos_z-2.1, $fn=30);
-//					translate([-10, 0, 0])   cylinder(d=3.5, h=arm_pos_z-2.1, $fn=30);
-//				}
 			translate([0, 7.5, 3.6])   rotate([0, 90, 0]) cylinder(d=3, h=100, center=true);
 			translate([0, 0, -1])   cylinder(d=inner_tube_dia, h=arm_pos_z+10, $fn=fn);
-			translate([0, 0, arm_pos_z])  
-			{
-				translate([0, 0, 3]) hull() {
-					translate([0, 0, 0.1])   roundCornersCube(10, 10, 0.2, 3);
-					translate([0, 0, arm_heigth+0.2])   roundCornersCube(gps_width-3, gps_length-3, 0.2, 3);
-				}
-				translate([0, 0, arm_heigth+10/2])   cube([gps_width, gps_length, 10], center=true);
-				translate([gps_width/2, 0, arm_heigth+10/2])   cube([10, 3.5, 10], center=true);
-				translate([-gps_width/2, 6, arm_heigth+10/2])   cube([10, 3.5, 10], center=true);
-				translate([-gps_width/2, -6, arm_heigth+10/2])   cube([10, 3.5, 10], center=true);
-				hull() {
-					translate([0, 0, 2.5+3])  rotate([0, 90, 0])  cylinder(d=2, h=30, center=true);
-					translate([0, 0, arm_heigth-6]) rotate([0, 90, 0])  cylinder(d=8, h=30, center=true);
-				}
-//					hull() {
-//						translate([0, -10, 2.5+3])  rotate([0, 90, 90])  cylinder(d=2, h=15, center=true);
-//						translate([0, -10, arm_heigth-6]) rotate([0, 90, 90])  cylinder(d=8, h=15, center=true);
-//					}
-				hull() {
-					translate([0, -0, 2.5+3])  rotate([0, 90, 90])  cylinder(d=2, h=30, center=true);
-					translate([0, -0, arm_heigth-6]) rotate([0, 90, 90])  cylinder(d=8, h=30, center=true);
-				}
-				
-			}
-		
-		}
-		
-	}
-	
-}
-
-module GPS_bracket_lower(thick=0.6, height=top_height, fullview=false)
-{
-	gps_width = 26+0.6;
-	gps_length= 21+0.6;
-	
-//	arm_length = 16;
-	arm_length = 20;
-	arm_heigth = 13;
-	arm_pos_z = 12-8+10;
-	//inner_tube_dia = 8*2/sqrt(3);// 11;
-	inner_tube_dia = 3;
-	out_tube_dia =  inner_tube_dia +6;
-	
-	fn = 30;
-	module pillar()
-	{
-		cylinder(d=12, h=height, $fn=30);
-	}
-	
-	
-	module plain()
-	{
-		translate([0, 0, 0])  rotate([0, 0, 0]) pillar();
-		hull()
-		{
-			translate([0, 0, 0])  cylinder(d=10, h=2, $fn=fn);
-			translate([0, -arm_length, 0])  cylinder(d=out_tube_dia, h=2, $fn =fn);
-		}
-		
-		translate([0, -arm_length/2, height/2])  cube([1.8, arm_length, height], center=true);
-		translate([7, -0, 3])   cube([10, 3, 6], center=true);
-		
-		translate([0, -arm_length, 0]) {
-			translate([0, 0, 0])   cylinder(d=out_tube_dia, h=arm_pos_z,  $fn=fn);
-		}
-	}
-	
-	difference() {
-		plain();
-		pillar_hole(height=height);
-		
-		translate([+8, 0, 4])   rotate([90, 0, 0]) hull() {
-			cylinder(d=3.2, h= 10, center=true);
-			translate([0, 2, 0]) cylinder(d=3, h= 10, center=true);
-		}
-		translate([0, -arm_length, 0])  
-		{
-			
-			translate([0, 0, -0.1]) rotate([0, 0, -0]) hull() {
-				translate([0, 0, 0])   cylinder(d=inner_tube_dia-2, h=arm_pos_z+1, $fn=30);
-				translate([0, -10, 0])   cylinder(d=inner_tube_dia-2, h=arm_pos_z+1, $fn=30);
-			}
-			translate([0, 7.5, 3.6])   rotate([0, 90, 0]) cylinder(d=3, h=100, center=true);
-			translate([0, 0, -1])   cylinder(d=inner_tube_dia, h=arm_pos_z+10, $fn=fn);
-		
-		}
-		
-	}
-	if (fullview)
-	{
-			translate([0, -arm_length, 0])   color("green") cylinder(d=3, h=arm_pos_z+27,  $fn=fn);
-		
-	}
-}
-
-
-module GPS_bracket_upperXX(thick=0.6, height=top_height)
-{
-	gps_width = 26+0.6;
-	gps_length= 21+0.6;
-	
-//	arm_length = 16;
-	arm_length = 20;
-	arm_heigth = 13;
-	arm_pos_z = 10-8+10;
-	//inner_tube_dia = 8*2/sqrt(3);// 11;
-	//out_tube_dia =  8*2/sqrt(3) +3; //inner_tube_dia + 3;
-	inner_tube_dia = 3;
-	out_tube_dia =  inner_tube_dia +6;
-	
-	fn = 30;
-	module pillar()
-	{
-		cylinder(d=12, h=height, $fn=30);
-	}
-	
-	
-	module plain()
-	{
-		
-		
-		translate([0, -arm_length, 0]) {
-			
-			
-			translate([0, 0, 0])   cylinder(d=out_tube_dia, h=arm_pos_z,  $fn=fn);
-
-			translate([0, 0, arm_pos_z]) {
-				
-				hull() {
-					translate([0, 0, 0])   cylinder(d=out_tube_dia, h=0.2, $fn=fn);
-					translate([0, 0, arm_heigth])   roundCornersCube(gps_width+3, gps_length+3, 0.1, 3);
-				}
-				translate([0, 0, arm_heigth+6/2])   roundCornersCube(gps_width+3, gps_length+3, 6, 3);
-			
-			}
-		}
-	}
-	
-	difference() {
-		plain();
-		
-		translate([0, -arm_length, 0])  
-		{
-			
-			translate([0, 0, -1])   cylinder(d=inner_tube_dia, h=arm_pos_z+10, $fn=fn);
-
-			translate([0, 0, -0.1]) rotate([0, 0, -0]) hull() {
-				translate([0, 0, 0])   cylinder(d=inner_tube_dia-2, h=arm_pos_z-1, $fn=30);
-				translate([0, -10, 0])   cylinder(d=inner_tube_dia-2, h=arm_pos_z-1, $fn=30);
-			}
-				
-
 			translate([0, 0, arm_pos_z])  
 			{
 				translate([0, 0, 3]) hull() {
@@ -454,97 +247,8 @@ module GPS_bracket_upperXX(thick=0.6, height=top_height)
 }
 
 
-module GPS_bracket_upper(thick=0.6, height=top_height)
-{
-	gps_width = 26+0.6;
-	gps_length= 21+0.6;
-	
-//	arm_length = 16;
-	arm_length = 20;
-	arm_heigth = 13;
-	arm_pos_z = 10-8+10;
-	//inner_tube_dia = 8*2/sqrt(3);// 11;
-	//out_tube_dia =  8*2/sqrt(3) +3; //inner_tube_dia + 3;
-	inner_tube_dia = 3;
-	out_tube_dia =  inner_tube_dia +6;
-	
-	fn = 30;
-	module pillar()
-	{
-		cylinder(d=12, h=height, $fn=30);
-	}
-	
-	
-	module plain()
-	{
-		
-		
-		translate([0, -arm_length, 0]) {
-			
-			
-			//translate([0, 0, 0])   cylinder(d=out_tube_dia, h=arm_pos_z,  $fn=fn);
 
-			translate([0, 0, 0]) {
-				
-//				hull() {
-//					translate([0, 0, 0])   cylinder(d=out_tube_dia, h=0.2, $fn=fn);
-//					translate([0, 0, arm_heigth])   roundCornersCube(gps_width+3, gps_length+3, 0.1, 3);
-//				}
-				//#translate([0, 0, arm_heigth+6/2])   roundCornersCube(gps_width+3, gps_length+3, 6, 3);
-				translate([0, 0, arm_heigth/2])   roundCornersCube(gps_width+3, gps_length+3, arm_heigth-0.1, 3);
-			
-			}
-		}
-	}
-	
-	difference() {
-		plain();
-		
-		translate([0, -arm_length, 0])  
-		{
-			
-			translate([0, 0, -1])   cylinder(d=inner_tube_dia, h=arm_pos_z+10, $fn=fn);
-
-			translate([0, 0, -0.1]) rotate([0, 0, -0]) hull() {
-				translate([0, 0, 0])   cylinder(d=inner_tube_dia-2, h=arm_pos_z-1, $fn=30);
-				translate([0, -15, 0])   cylinder(d=inner_tube_dia-2, h=arm_pos_z-1, $fn=30);
-			}
-				
-
-			translate([0, 0, 0])  
-			{
-//				translate([0, 0, 0]) hull() {
-//					translate([0, 0, 0.1])   roundCornersCube(10, 10, 0.2, 3);
-//					translate([0, 0, arm_heigth+0.2])   roundCornersCube(gps_width-3, gps_length-3, 0.2, 3);
-//				}
-				translate([0, 0, arm_heigth+0/2])   cube([gps_width, gps_length, 10], center=true);
-				translate([0, 0, arm_heigth-2])   cube([gps_width-3, gps_length-3, 10], center=true);
-				
-				translate([gps_width/2, 0, arm_heigth+0/2])   cube([10, 3.5, 10], center=true);
-				translate([-gps_width/2, 6, arm_heigth+0/2])   cube([10, 3.5, 10], center=true);
-				translate([-gps_width/2, -6, arm_heigth+0/2])   cube([10, 3.5, 10], center=true);
-				translate([0, 0, 2.5+3])  rotate([0, 90, 0])  cylinder(d=5, h=30, center=true);
-				translate([0, -0, arm_heigth-6]) rotate([0, 90, 90])  cylinder(d=5, h=30, center=true);
-//				hull() {
-//					translate([0, 0, 2.5+3])  rotate([0, 90, 0])  cylinder(d=2, h=30, center=true);
-//					translate([0, 0, arm_heigth-6]) rotate([0, 90, 0])  cylinder(d=8, h=30, center=true);
-//				}
-//				hull() {
-//					translate([0, -0, 2.5+3])  rotate([0, 90, 90])  cylinder(d=2, h=30, center=true);
-//					translate([0, -0, arm_heigth-6]) rotate([0, 90, 90])  cylinder(d=8, h=30, center=true);
-//				}
-				
-			}
-		
-		}
-		
-	}
-	
-}
-
-
-
-module XT60_bottom_plate(thick=1.4, fullview=false)
+module beeper_bottom_plate(thick=1.4, fullview=false)
 {
 	ra = M3_hexa*2/sqrt(3);
 	r8 = 8*2/sqrt(3);
@@ -558,8 +262,8 @@ module XT60_bottom_plate(thick=1.4, fullview=false)
 	module plain()
 	{
 		difference() {
-			translate([0, 0, thick/2]) cube([xt60_length, 50, thick], center=true);// roundCornersCube(xt60_length, 50, thick, 3);
-			for(y=[-1, 1]) translate([0, y*(pillar_width+15)/2, (thick/2)])  rotate([0, 0, y*rot]) cube([xt60_length+10, 15, thick*2], center=true);
+			translate([-2, 0, thick/2]) cube([15, 50, thick], center=true);
+			for(y=[-1, 1]) translate([0, y*(pillar_width+15)/2, (thick/2)])  rotate([0, 0, y*rot]) cube([20, 15, thick*2], center=true);
 		}
 		for(y=[-1,1])
 		{
@@ -571,7 +275,7 @@ module XT60_bottom_plate(thick=1.4, fullview=false)
 	difference() {
 		union() {
 			plain();
-			for(y=[-1, 1]) translate([2, y*(pillar_width-1.5)/2,(bottom_height)/2])  rotate([0, 0, y*rot]) cube([xt60_length-2, thick, bottom_height], center=true);
+			for(y=[-1, 1]) translate([2, y*(pillar_width-1.5)/2,(bottom_height)/2])  rotate([0, 0, y*rot]) cube([8, thick, bottom_height], center=true);
 		}
 		
 		for(x=[0]) for(y=[1, -1]) translate([x*8, y*12, 0]) {
@@ -587,30 +291,23 @@ module XT60_bottom_plate(thick=1.4, fullview=false)
 	}
 }
 
-module XT60_gps_view()
+module gps_bracket_view()
 {
 	//for(y=[-1,1]) translate([0, y*pillar_width/2, 0])  color("red") cylinder(d=5, h=pilar_heigth+1.01);
 	translate([5, 0, bottom_height])  
 	{
-		translate([0, 0, -0.4])  rotate([0, 180, 180]) XT60_bottom_plate(fullview=false);
+		translate([0, 0, -0.4])  rotate([0, 180, 180]) beeper_bottom_plate(fullview=false);
 	}
 	translate([0, -pillar_width/2, bottom_height]) rotate([0, 0, 45])  {
-		 GPS_bracket();
-		//GPS_bracket_lower(fullview=true);
-		//translate([0, 0, 30])  GPS_bracket_upper();
+		 gps_bracket();
 	}
 	translate([0, pillar_width/2, bottom_height+top_height]) rotate([0, 180, 180]) antenna_bracket(fullview=true);
 }
 
 
 
-//translate([80, 0, 0]) XT60_gps_view();
+//translate([80, 0, 0]) gps_bracket_view();
 
-translate([-0, 0, 0])  XT60_bottom_plate();
-//translate([0, 30, 0])  rotate([0, 0, 0]) xt60_bracket();
-translate([-30, -20, 0])  GPS_bracket();
-
-//translate([0, 0, 0])  GPS_bracket_lower(fullview=false);
-//translate([0, 0, 0])  GPS_bracket_upper();
-
+translate([-0, 0, 0])  beeper_bottom_plate();
+translate([-30, -20, 0])  gps_bracket();
 translate([-30, 20, 0]) rotate([0, 0, 180]) antenna_bracket();

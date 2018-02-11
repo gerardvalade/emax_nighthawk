@@ -13,6 +13,8 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+use <cleanhawk_top.scad>;
+use <cleanhawk_bottom.scad>;
 
 $fn=30;
 
@@ -55,7 +57,7 @@ module roundCornersCube(x,y,z,r)  // Now we just substract the shape we have cre
 	}
 }
 
-module arm()
+module nighthawk_arm()
 {
 	M3_hole = 3.5;
 	arm_length = 94;
@@ -99,9 +101,9 @@ module spacer(heigth)
 	
 	module arm_pos()
 	{
-		translate([27.7, 49.8, 9]) rotate([0, 0, -65]) arm();
+		translate([27.7, 49.8, 9]) rotate([0, 0, -65]) nighthawk_arm();
 	}
-	arm();
+	nighthawk_arm();
 	translate([-width/2, -length/2-2.6, 0])   import("Cleanhawk_Spacer.STL");
 }
 module nighthaw_camera_plate()
@@ -130,185 +132,6 @@ module nighthaw_camera_plate()
 	}
 }
 
-module nighthaw_frame()
-{
-	thin = 1.5;
-	height = 10;
-	M3_hole = 3.8;
-	arm_height = height - 3;
-	arm_lenght = 94;
-	arm_width = 24.8;
-	corner_dia = 2;
-	
-	module frame_back()
-	{
-		/*translate([0, 0.5, 0])
-		{
-			translate([0, 59.1, 0]) difference() {
-				union() {
-					translate([0, 0, 0]) cube([10, thin, height]);
-					translate([10, 0, 0]) rotate([0, 0, 14.7]) cube([18.5, thin, height]);
-					translate([0, -5.75, 0]) cube([8.5/2, 7.4, height]);
-				}
-				translate([-0.01, -4.75, -0.1]) cube([6.5/2, 6.5, height+1]);
-			}
-		
-		}*/
-		translate([0, 59.1+0.8, 0]) difference() {
-			union() {
-				translate([0, 0, 0]) cube([10, thin, height]);
-				translate([10, 0, 0]) rotate([0, 0, 14.7]) cube([18.5, thin, height]);
-				translate([0, -5.75-0.3, 0]) cube([8.5/2, 7.4, height]);
-			}
-			translate([-0.01, -4.75-0.3, -0.1]) cube([6.5/2, 6.5+0.5, height+1]);
-		}
-	}
-	
-	module frame_front()
-	{
-		translate([0, -70-0.8, 0])
-		{
-			difference() {
-				union() {
-					translate([0, 0, 0]) cube([8, thin, height]);
-					translate([0, 0, 0]) cube([8.5/2, 8.8, height]);
-				}
-				translate([-0.01, -0.05, -0.1]) cube([6.5/2, 6.5+1, height+1]);
-			}
-			translate([8, 1, 0]) cylinder(d = corner_dia, h=height);
-			translate([8, 0, 0]) rotate([0, 0, 12.5]) {
-				difference() {
-					cube([20.5, thin, height]);
-					for(i = [0, 1, -1])
-					translate([20.5/2+i*5, 10, height/2]) rotate([90, -15, 0]) hull()
-					{
-						translate([0, 2, 0]) cylinder(d = 2.5, h=20);
-						translate([0, -2, 0]) cylinder(d = 2.5, h=20);
-					}
-				}
-				
-			}
-		
-		}
-	}
-	module armx()
-	{
-		translate([-arm_width/2, 0, 0])  difference()
-		{
-			translate([0, -5, 0]) rotate([0, 0, 0]) cube([arm_width, arm_lenght, 3]); 	
-		}
-	}
-
-	module arm_holder(hole=false)
-	{
-		arm_lenght = 10;
-		module createMeniscus(h,radius) // This module creates the shape that needs to be substracted from a cube to make its corners rounded.
-			difference(){        //This shape is basicly the difference between a quarter of cylinder and a cube
-		   		translate([radius/2+0.1,radius/2+0.1,0]){
-		      		cube([radius+0.2,radius+0.1,h+0.2],center=true);         // All that 0.x numbers are to avoid "ghost boundaries" when substracting
-		   		}
-		
-		   	cylinder(h=h+0.2,r=radius,$fn = 25,center=true);
-		}
-
-
-		module roundCornersCube(x,y,z,r)  // Now we just substract the shape we have created in the four corners
-		difference(){
-		   cube([x,y,z], center=true);
-		
-		      translate([-x/2+r,-y/2+r]){ // ... 
-		      rotate(180){
-		         createMeniscus(z,r);
-		      }
-		   }
-		      translate([x/2-r,-y/2+r]){
-		      rotate(270){
-		         createMeniscus(z,r);
-		      }
-		   }
-		}
-
-		
-		translate([28, 49.7, 0]) rotate([0, 0, -65])
-		translate([0, 0, 0])  
-		{
-			if (!hole) translate([0, 1, height/2]) roundCornersCube(arm_width, arm_lenght, height, 4);
-			
-			if (hole) { 	
-				translate([0, -0, 3.5+3.3]) cube([7.5, arm_lenght+5, 7], center=true);
-				translate([0-7, 0, -1]) cylinder(d=M3_hole, h=10);
-				translate([0+7, 0, -1]) cylinder(d=M3_hole, h=10);
-				translate([0, -5, 5+arm_height]) rotate([0, 0, 0]) cube([arm_width+0.8, 25, 10], center=true); 
-			}
-		}
-	}
-	
-	module half1()
-	{
-		difference(){
-			union() {
-				translate([28-0.4, 64.5+0.8, 0]) cylinder(d = corner_dia, h=height);
-				translate([27.5, 64, 0]) rotate([0, 0, -65]) translate([-0.9, 0, 0]) cube([28.3, thin, height]);
-				translate([39.7, 39.5, 0]) cylinder(d = corner_dia, h=height);
-				translate([38.9, 39.6, 0]) rotate([0, 0, -130]) cube([17.8, thin, height]);
-				translate([28.2, 25.7, 0]) cylinder(d = corner_dia, h=height);
-				translate([27.3, 25.5, 0]) rotate([0, 0, -90]) cube([26, thin, height]);
-				arm_holder();
-		
-			}
-			arm_holder(true);
-			for(i = [0:3])
-				translate([15, 5+i*5.5, height/2]) rotate([0, 90, 0]) rotate([0, 0, 15]) hull()
-				{
-					translate([2, 0, 0]) cylinder(d = 2.5, h=20);
-					translate([-2, 0, 0]) cylinder(d = 2.5, h=20);
-				}
-		}
-	}
-	module half()
-	{
-		frame_back();
-		half1();
-		mirror([0, 1, 0]) half1();
-		frame_front();
-	}
-	difference() {
-		union() {
-			translate([0, 0, 0]) half();
-			mirror([1, 0, 0]) half();
-		}
-		//#translate([-0.0, 57.5, height/2]) cube([6.5, 6.5, height+1], center=true);
-		//#translate([-0.0, -67, height/2]) cube([6.5, 6.5, height+1], center=true);
-		translate([0, 66, 0]) rotate([0, 0, 14.7]) 
-				for(i = [0:3])
-				translate([11+i*4, 0, height/2])  rotate([90, -15, 0]) hull()
-				{
-					translate([0, 2, 0]) cylinder(d = 2.5, h=10);
-					translate([0, -2, 0]) cylinder(d = 2.5, h=10);
-				}
-		translate([-8-6-2.5, 70, 8]) rotate([90, 0, 0])
-		{ 
-			hull()
-			{
-				translate([0, 0, 0]) cylinder(d = 6, h=20);
-				translate([5, 0, 0]) cylinder(d = 6, h=20);
-			}
-			hull()
-			{
-				translate([0, 0, 0]) cylinder(d = 6, h=20);
-				translate([0, 2, 0]) cylinder(d = 6, h=20);
-			}
-			hull()
-			{
-				translate([5, 0, 0]) cylinder(d = 6, h=20);
-				translate([5, 2, 0]) cylinder(d = 6, h=20);
-			}
-		
-		}
-			
-	}
-		
-}
 
 
 module hole()
@@ -369,11 +192,10 @@ module nighthawk_pillar_hole(d, h)
 		}
 	
 	}
-
 }
 
 
-module nighthaw_main_plate()
+module nighthaw_main_plate(zz=0)
 {
 	thick = 2.15;
 	M3_hole = 3;
@@ -428,11 +250,6 @@ module nighthaw_main_plate()
 	{
 		translate([0, 0, thick/2]) {
 			roundCornersCube(plate_length, plate_width, thick, 3);	
-			translate([-plate_diff, 0, 0]) {
-			
-			
-			}
-		
 		}	
 		//color("red") translate([-plate_length/2+100, 0, 0]) rotate([90, 0, 0]) cylinder(d = 0.5, h=100, center=true);
 		//nighthawk_pillar();
@@ -443,7 +260,7 @@ module nighthaw_main_plate()
 		{
 			translate([-50, 26,  thick/2]) rotate([0, 0, 115]) roundCornersCube(18, 34, thick, 3);
 			translate([-38, 25,  thick/2]) rotate([0, 0, 140]) roundCornersCube(23, 23, thick, 3);
-			color("gray", 0.3) translate([-48, 26,  -3]) rotate([0, 0,30])  arm();
+			color("gray", 0.3) translate([-48, 26,  -3]) rotate([0, 0, 30])  translate([0,3,0]) nighthawk_arm();
 			
 		}
 		arm1();
@@ -479,15 +296,15 @@ module nighthaw_main_plate()
 			}
 		}
 	}
-	module M3_head()
+	module M3_screw(length=10)
 	{
 		h = 2.7;
 		translate([0, 0, h/2+1])  {
 			difference() {
 				color("white") cylinder(d = 5.4, h=h);
-				translate([0, 0, 0]) color("black") cylinder(d = 3, h=5, $fn=6);
+				translate([0, 0, 0]) color("red") cylinder(d = 3, h=5, $fn=6);
 			}
-			translate([0, 0, -7.1-h]) color("white") cylinder(d = 3, h=10);
+			translate([0, 0, -7.1-h]) color("white") cylinder(d = 3, h=length);
 		}
 	}
 	difference()
@@ -498,8 +315,8 @@ module nighthaw_main_plate()
 			mirror([1, 0, 0]) arm2();
 			for(x =[1, -1])	for(y =[1, -1])
 			{
-				translate([ x*(117.5-head_dia)/2, y*(55.5-head_dia)/2, -0.1]) M3_head();
-				translate([ x*(92-head_dia)/2, y*(67.20-head_dia)/2, -0.1]) M3_head();
+				translate([ x*(117.5-head_dia)/2, y*(55.5-head_dia)/2, -0.1+zz]) M3_screw();
+				translate([ x*(92-head_dia)/2, y*(67.20-head_dia)/2, -0.1+zz]) M3_screw();
 			}
 		}
 		translate([plate_diff, 0, 0]) hole();
@@ -548,19 +365,91 @@ module nighthaw_top_plate()
 	translate([0, 0,  (28)/2+thick]) color("blue", 0.8) cube([103, 32, 28], center=true);
 }
 
-module nighthawk_view()
+
+module nighthaw_bottom_plate()
 {
-	translate([0, 0, -10]) rotate([0, 0, 90]) nighthaw_frame();
-	translate([0, 0, 0]) rotate([0, 0, 0]) nighthaw_main_plate();
-	translate([0, 0, pilar_height+2.5]) rotate([0, 0, 0]) nighthaw_top_plate();
+	thick = 2.15;
+	M3_hole = 3;
 	
+	plate_length = 125;
+	plate_width = 56.15;
+	plate_diff = 0;
+
+	module hull_hole(l)
+	{
+		translate([0, 0, -0.1])  hull()
+		{
+			translate([0, 0, 0]) cylinder(d = M3_hole, h=thick+0.5);
+			translate([l, 0, 0]) cylinder(d = M3_hole, h=thick+0.5);
+		}
+		
+	}
+
+	module plain()
+	{
+		translate([0, 0, thick/2]) {
+			roundCornersCube(plate_length, plate_width, thick, 3);	
+		}	
+		//color("red") translate([-plate_length/2+100, 0, 0]) rotate([90, 0, 0]) cylinder(d = 0.5, h=100, center=true);
+		//nighthawk_pillar();
+	}
+	module arm2()
+	{
+		module arm1()
+		{
+			translate([-50, 26,  thick/2]) rotate([0, 0, 115]) roundCornersCube(18, 34, thick, 3);
+			translate([-38, 25,  thick/2]) rotate([0, 0, 140]) roundCornersCube(23, 23, thick, 3);
+			
+		}
+		arm1();
+		mirror([0, 1, 0]) arm1();
+	}
+		
+	difference()
+	{
+		union() {
+			translate([plate_diff, 0, 0]) plain();
+			arm2();
+			mirror([1, 0, 0]) arm2();
+		}
+			
+		head_dia=5.37;
+		for(x =[1, -1])	for(y =[1, -1])
+		{
+			translate([ x*(117.5-head_dia)/2, y*(55.5-head_dia)/2, -0.1]) cylinder(d = M3_hole, h=thick+0.5);
+			translate([ x*(92-head_dia)/2, y*(67.20-head_dia)/2, -0.1]) cylinder(d = M3_hole, h=thick+0.5);
+			
+		}
+		translate([0, 0, -0.1]) nighthawk_pillar_hole(d=6, h=3);
+	}
 }
-	
-
-nighthawk_view();
 
 
-translate([0, 80, 0]) nighthaw_camera_plate();
+module nighthawk_view(zz = 0)
+{
+	translate([0, 0, 0]) {
+		rotate([0, 0, 0])   nighthaw_main_plate(12);
+		translate([0, 0, -zz-10]) {
+			rotate([0, 0, 90]) color("green")  cleanhawk_top_frame();
+
+			translate([0, 0, -zz-2]) {
+				rotate([0, 0, 0]) color("blue", 0.3) nighthaw_bottom_plate();
+				translate([0, 0, -zz-3.5]) {
+					rotate([0, 0, 90]) color("green")  cleanhawk_bottom_frame();
+				
+					translate([0, 0, -zz-2]) rotate([0, 0, 0]) color("gray", 0.3) nighthaw_bottom_plate();
+				
+				}
+			}
+		}
+	}
+}
+
+nighthawk_view(zz=4);
+//nighthaw_main_plate();
+
+
+
 
 
 
